@@ -2,6 +2,10 @@
 
 - Protect your forum from spam and abuse while letting real people pass through with ease.
 
+### Release Note
+
+Due to some core code changes Toby has made, this plugin will only work with esoTalk version 1.0.0g4 and beyond! Sorry :cry: But luckly 1.0.0g4 wont be far away from being released.
+
 ### Installation
 
 Browse to your esoTalk plugin directory:
