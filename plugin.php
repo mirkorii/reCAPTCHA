@@ -6,7 +6,7 @@ if (!defined("IN_ESOTALK")) exit;
 ET::$pluginInfo["reCAPTCHA"] = array(
 	"name" => "reCAPTCHA",
 	"description" => "Protect your forum from spam and abuse while letting real people pass through with ease.",
-	"version" => "1.0.0",
+	"version" => "1.0.1",
 	"author" => "Tristan van Bokkem",
 	"authorEmail" => "tristanvanbokkem@gmail.com",
 	"authorURL" => "http://esotalk.org",
@@ -75,7 +75,7 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 
 			// If no valid words are entered, show them an error.
 			if (!$reCaptcha) {
-				$form->error("recaptcha_response_field", T("message.invalidCaptcha"));
+				$form->error("recaptcha_response_field", T("message.invalidCAPTCHA"));
 			} else {
 
 				// Make sure the passwords match. The model will do the rest of the validation.
@@ -127,7 +127,7 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 		// Format the reCAPTCHA form with some JavaScript and HTML
 		// retrieved from the Google reCAPTCHA library.
 	    return "<script type='text/javascript'>
-					var RecaptchaOptions={theme:'clean', custom_translations:" . json_encode(T("mlarray.reCaptcha")) . "};
+					var RecaptchaOptions={theme:'clean', custom_translations:" . json_encode(T("mlarray.reCAPTCHA")) . "};
 					$('#recaptcha_image').live('click', function() { Recaptcha.reload(); });
 				</script>".
 				recaptcha_get_html(C('plugin.reCAPTCHA.public'), '', C('esoTalk.https'));

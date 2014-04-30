@@ -40,7 +40,7 @@ $form = $data["form"];
         <?php endforeach; ?>
         <?php echo $form->addHidden("recaptcha_response_field", "manual_challenge"); ?>
         <?php echo $form->getError("recaptcha_response_field"); ?>
-        <small><i class="icon-question-sign"></i> <?php echo T("message.reCaptchaRefreshInfo"); ?></small>
+        <small><i class="icon-question-sign"></i> <?php echo T("message.reCAPTCHARefreshInfo"); ?></small>
     </li>
 <?php endif; ?>
 

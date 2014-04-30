@@ -19,7 +19,7 @@ $form = $data["reCAPTCHASettingsForm"];
 <li>
     <label><?php echo T("Public Key"); ?></label>
     <?php echo $form->input("public"); ?>
-    <small><?php echo T("Enter your reCAPTCHA Keys (<a href='https://www.google.com/recaptcha/admin#whyrecaptcha' target='_blank'>Got no Keys yet? Get them here!</a>)"); ?></small>
+    <small><?php echo T("message.reCAPTCHA.settings"); ?></small>
 </li>
 
 
