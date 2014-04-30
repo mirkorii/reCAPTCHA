@@ -25,10 +25,12 @@ Add the following definitions to your translation file (or create a seperate def
 
 ```
 $definitions["Are you human?"] = "Are you human?";
+$definitions["Private Key"] = "Private Key";
+$definitions["Public Key"] = "Public Key";
 $definitions["message.reCAPTCHARefreshInfo"] = "Click or tap on an image to refresh it";
 $definitions["message.invalidCAPTCHA"] = "The CAPTCHA you entered is invalid. Please try again.";
 $definitions["message.reCAPTCHA.settings"] = "Enter your reCAPTCHA Keys (<a href='https://www.google.com/recaptcha/admin#whyrecaptcha' target='_blank'>Got no Keys yet? Get them here!</a>)";
-$definitions["mlarray.reCaptcha"] = array(
+$definitions["mlarray.reCAPTCHA"] = array(
 	"instructions_visual" => "Type the two words"
 );
 ```
