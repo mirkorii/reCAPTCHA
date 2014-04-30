@@ -33,7 +33,11 @@ $definitions["mlarray.reCaptcha"] = array(
 ```
 
 ### Screenshots
-
+Login page
 ![Login page](http://i.imgur.com/xq3WbLf.png)
 
+Wrong CAPTCHA
 ![Wrong CAPTCHA](http://i.imgur.com/THqvAsK.png)
+
+reCAPTCHA Settings
+![reCAPTCHA Settings](http://i.imgur.com/M7ZX1R1.png)
