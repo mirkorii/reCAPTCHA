@@ -31,3 +31,9 @@ $definitions["mlarray.reCaptcha"] = array(
 	"instructions_visual" => "Type the two words"
 );
 ```
+
+### Screenshots
+
+![Login page](http://i.imgur.com/xq3WbLf.png)
+
+![Wrong CAPTCHA](http://i.imgur.com/THqvAsK.png)
