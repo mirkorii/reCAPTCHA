@@ -6,7 +6,7 @@ if (!defined("IN_ESOTALK")) exit;
 ET::$pluginInfo["reCAPTCHA"] = array(
 	"name" => "reCAPTCHA",
 	"description" => "Protect your forum from spam and abuse while letting real people pass through with ease.",
-	"version" => "1.0.2",
+	"version" => "1.0.3",
 	"author" => "Tristan van Bokkem",
 	"authorEmail" => "tristanvanbokkem@gmail.com",
 	"authorURL" => "http://esotalk.org",
@@ -18,12 +18,18 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 
 	public function setup()
 	{
-		// We need to check if the Honeypot plugin is active, because it also overrides the join page.
-		// Waiting for https://github.com/esotalk/esoTalk/issues/215 to get this fixed for both plugins.
-		if (in_array("Honeypot", C("esoTalk.enabledPlugins"))) {
-			return "This plugin cannot be used together with the <strong>Honeypot</strong> plugin. Please disable the Honeypot plugin if you want to use this plugin.";
+		// Don't enable this plugin if we are not running PHP >= 5.3.0.
+		if (version_compare(PHP_VERSION, '5.3.0') < 0) {
+			return "PHP >= 5.3.0 is required to enable this plugin.<br />However, you are running PHP ".PHP_VERSION;
 		} else {
-			return true;
+
+			// We need to check if the Honeypot plugin is active, because it also overrides the join page.
+			// Waiting for https://github.com/esotalk/esoTalk/issues/215 to get this fixed for both plugins.
+			if (in_array("Honeypot", C("esoTalk.enabledPlugins"))) {
+				return "This plugin cannot be used together with the <strong>Honeypot</strong> plugin. Please disable the Honeypot plugin if you want to use this plugin.";
+			} else {
+				return true;
+			}
 		}
 	}
 
