@@ -10,7 +10,10 @@ ET::$pluginInfo["reCAPTCHA"] = array(
 	"author" => "Tristan van Bokkem",
 	"authorEmail" => "tristanvanbokkem@gmail.com",
 	"authorURL" => "http://esotalk.org",
-	"license" => "GPLv2"
+	"license" => "GPLv2",
+	"dependencies" => array(
+		"esoTalk" => "1.0.0g4"
+	)
 );
 
 
@@ -22,14 +25,7 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 		if (version_compare(PHP_VERSION, '5.3.0') < 0) {
 			return "PHP >= 5.3.0 is required to enable this plugin.<br />However, you are running PHP ".PHP_VERSION;
 		} else {
-
-			// We need to check if the Honeypot plugin is active, because it also overrides the join page.
-			// Waiting for https://github.com/esotalk/esoTalk/issues/215 to get this fixed for both plugins.
-			if (in_array("Honeypot", C("esoTalk.enabledPlugins"))) {
-				return "This plugin cannot be used together with the <strong>Honeypot</strong> plugin. Please disable the Honeypot plugin if you want to use this plugin.";
-			} else {
-				return true;
-			}
+			return true;
 		}
 	}
 
@@ -39,93 +35,22 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 		require_once (PATH_PLUGINS."/reCAPTCHA/lib/recaptchalib.php");
 	}
 
-	// Override the join function to include the reCAPTCHA magic.
-	public function action_userController_join($sender)
+	public function handler_renderBefore($sender)
 	{
 		$sender->addCSSFile($this->resource("recaptcha.css"));
+	}
 
-		// If we're already logged in, get out of here.
-		if (ET::$session->user) $sender->redirect(URL(""));
+	// Hook into the join function to include the reCAPTCHA form.
+	public function handler_userController_initJoin($controller, $form)
+	{
+		if(C('plugin.reCAPTCHA.private') && C('plugin.reCAPTCHA.public')) {
 
-		// If registration is closed, show a message.
-		if (!C("esoTalk.registration.open")) {
-			$sender->renderMessage(T("Registration Closed"), T("message.registrationClosed"));
-			return;
+			// Add the reCAPTCHA section.
+			$form->addSection("recaptcha", T("Are you human?"));
+
+			// Add the reCAPTCHA field.
+			$form->addField("recaptcha", "recaptcha", array($this, "renderRecaptchaField"), array($this, "processRecaptchaField"));
 		}
-
-		// Set the title and make sure this page isn't indexed.
-		$sender->title = T("Sign Up");
-		$sender->addToHead("<meta name='robots' content='noindex, noarchive'/>");
-
-		// Construct a form.
-		$form = ETFactory::make("form");
-		$form->action = URL("user/join");
-
-		// Add the reCAPTCHA section.
-		$form->addSection("recaptcha");
-
-		// Add the reCAPTCHA field.
-		$form->addField("recaptcha", "recaptcha", array($this, "renderRecaptchaField"));
-
-		if ($form->isPostBack("cancel")) $sender->redirect(URL(R("return")));
-
-		// If the form has been submitted, validate it and add the member into the database.
-		if ($form->validPostBack("submit")) {
-
-			// Check for reCaptcha.
-			$reCaptcha = true;
-			if(C('plugin.reCAPTCHA.private') && C('plugin.reCAPTCHA.public')) {
-				$resp = recaptcha_check_answer (C('plugin.reCAPTCHA.private'), $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
-				$reCaptcha = $resp->is_valid;
-			}
-
-			// If no valid words are entered, show them an error.
-			if (!$reCaptcha) {
-				$form->error("recaptcha_response_field", T("message.invalidCAPTCHA"));
-			} else {
-
-				// Make sure the passwords match. The model will do the rest of the validation.
-				if ($form->getValue("password") != $form->getValue("confirm")) {
-					$form->error("confirm", T("message.passwordsDontMatch"));
-				}
-				if (!$form->errorCount()) {
-					$data = array(
-						"username" => $form->getValue("username"),
-						"email" => $form->getValue("email"),
-						"password" => $form->getValue("password"),
-						"account" => ACCOUNT_MEMBER
-					);
-
-					if (!C("esoTalk.registration.requireEmailConfirmation")) {
-						$data["confirmed"] = true;
-					} else {
-						$data["resetPassword"] = md5(uniqid(rand()));
-					}
-
-					// Create the member.
-					$model = ET::memberModel();
-					$memberId = $model->create($data);
-
-					// If there were validation errors, pass them to the form.
-					if ($model->errorCount()) {
-						$form->errors($model->errors());
-					} else {
-
-						// If we require the user to confirm their email, send them an email and show a message.
-						if (C("esoTalk.registration.requireEmailConfirmation")) {
-							$sender->sendConfirmationEmail($data["email"], $data["username"], $memberId.$data["resetPassword"]);
-							$sender->renderMessage(T("Success!"), T("message.confirmEmail"));
-						} else {
-							ET::$session->login($form->getValue("username"), $form->getValue("password"));
-							$sender->redirect(URL(""));
-						}
-						return;
-					}
-				}
-			}
-		}
-		$sender->data("form", $form);
-		$sender->render($this->view("join"));
 	}
 
 	function renderRecaptchaField($form)
@@ -136,7 +61,20 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 					var RecaptchaOptions={theme:'clean', custom_translations:" . json_encode(T("mlarray.reCAPTCHA")) . "};
 					$('#recaptcha_image').live('click', function() { Recaptcha.reload(); });
 				</script>".
-				recaptcha_get_html(C('plugin.reCAPTCHA.public'), '', C('esoTalk.https'));
+				recaptcha_get_html(C('plugin.reCAPTCHA.public'), '', C('esoTalk.https')).$form->getError("recaptcha_response_field");
+	}
+
+	function processRecaptchaField($form, $key, &$data)
+	{
+		// Check for reCaptcha.
+		$reCaptcha = true;
+		$resp = recaptcha_check_answer (C('plugin.reCAPTCHA.private'), $_SERVER["REMOTE_ADDR"], $form->getValue("recaptcha_challenge_field"), $form->getValue("recaptcha_response_field"));
+		$reCaptcha = $resp->is_valid;
+
+		// If no valid words are entered, show them an error.
+		if (!$reCaptcha) {
+			$form->error("recaptcha_response_field", T("message.invalidCAPTCHA"));
+		}
 	}
 
 	public function settings($sender)
