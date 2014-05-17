@@ -6,7 +6,7 @@ if (!defined("IN_ESOTALK")) exit;
 ET::$pluginInfo["reCAPTCHA"] = array(
 	"name" => "reCAPTCHA",
 	"description" => "Protect your forum from spam and abuse while letting real people pass through with ease.",
-	"version" => "1.1.0",
+	"version" => "1.1.1",
 	"author" => "Tristan van Bokkem",
 	"authorEmail" => "tristanvanbokkem@gmail.com",
 	"authorURL" => "http://esotalk.org",
@@ -61,7 +61,9 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 					var RecaptchaOptions={theme:'clean', custom_translations:" . json_encode(T("mlarray.reCAPTCHA")) . "};
 					$('#recaptcha_image').live('click', function() { Recaptcha.reload(); });
 				</script>".
-				recaptcha_get_html(C('plugin.reCAPTCHA.public'), '', C('esoTalk.https')).$form->getError("recaptcha_response_field");
+				recaptcha_get_html(C('plugin.reCAPTCHA.public'), '', C('esoTalk.https')).
+				$form->getError("recaptcha_response_field").
+				"<small><i class='icon-question-sign'></i> ".T("message.reCAPTCHARefreshInfo")."</small>";
 	}
 
 	function processRecaptchaField($form, $key, &$data)
