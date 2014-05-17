@@ -4,7 +4,7 @@
 
 ### Release Note
 
-Due to some core code changes Toby has made, this plugin will only work with esoTalk version 1.0.0g4 and beyond! Sorry :cry: But luckly 1.0.0g4 wont be far away from being released.
+- esoTalk version 1.0.0g4 and beyond is required!
 
 ### Installation
 
