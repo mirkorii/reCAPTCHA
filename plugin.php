@@ -33,7 +33,14 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 	{
 		// Include the Google reCAPTCHA library.
 		require_once (PATH_PLUGINS."/reCAPTCHA/lib/recaptchalib.php");
+
 		// Define default language definitions.
+		ET::define("message.reCAPTCHARefreshInfo", "Click or tap on an image to refresh it.");
+		ET::define("message.invalidCAPTCHA", "The CAPTCHA you entered is invalid. Please try again.");
+		ET::define("message.reCAPTCHA.settings", "Enter your reCAPTCHA Keys (<a href='https://www.google.com/recaptcha/admin#whyrecaptcha' target='_blank'>Got no Keys yet? Get them here!</a>)");
+		ET::define("mlarray.reCAPTCHA", array(
+			"instructions_visual" => "Type the two words"
+		));
 	}
 
 	public function handler_renderBefore($sender)
