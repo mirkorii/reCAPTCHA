@@ -25,13 +25,13 @@ chown -R apache:apache reCAPTCHA/
 
 ### Translation
 
-Add the following definitions to your translation file (or create a seperate definitions.Backup.php file):
+Create `definitions.reCAPTCHA.php` in your language pack with the following definitions:
 
 ```
 $definitions["Are you human?"] = "Are you human?";
 $definitions["Private Key"] = "Private Key";
 $definitions["Public Key"] = "Public Key";
-$definitions["message.reCAPTCHARefreshInfo"] = "Click or tap on an image to refresh it";
+$definitions["message.reCAPTCHARefreshInfo"] = "Click or tap on an image to refresh it.";
 $definitions["message.invalidCAPTCHA"] = "The CAPTCHA you entered is invalid. Please try again.";
 $definitions["message.reCAPTCHA.settings"] = "Enter your reCAPTCHA Keys (<a href='https://www.google.com/recaptcha/admin#whyrecaptcha' target='_blank'>Got no Keys yet? Get them here!</a>)";
 $definitions["mlarray.reCAPTCHA"] = array(

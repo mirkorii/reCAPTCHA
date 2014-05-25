@@ -33,6 +33,7 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 	{
 		// Include the Google reCAPTCHA library.
 		require_once (PATH_PLUGINS."/reCAPTCHA/lib/recaptchalib.php");
+		// Define default language definitions.
 	}
 
 	public function handler_renderBefore($sender)
