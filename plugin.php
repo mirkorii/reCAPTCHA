@@ -6,7 +6,7 @@ if (!defined("IN_ESOTALK")) exit;
 ET::$pluginInfo["reCAPTCHA"] = array(
 	"name" => "reCAPTCHA",
 	"description" => "Protect your forum from spam and abuse while letting real people pass through with ease.",
-	"version" => "1.2.0",
+	"version" => "1.2.1",
 	"author" => "Tristan van Bokkem",
 	"authorEmail" => "tristanvanbokkem@gmail.com",
 	"authorURL" => "http://esotalk.org",
@@ -65,9 +65,30 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 	{
 		// Format the reCAPTCHA form with some JavaScript and HTML
 		// retrieved from the Google reCAPTCHA library.
-	    	return "<div class='g-recaptcha' data-sitekey='".C('plugin.reCAPTCHA.public')."'></div>
-				<script type='text/javascript' src='https://www.google.com/recaptcha/api.js?hl=en'>
-                   </script>";
+	    	return "<script type='text/javascript' src='https://www.google.com/recaptcha/api.js?hl=en' async defer></script>
+			<div class='g-recaptcha' data-sitekey='".C('plugin.reCAPTCHA.public')."'></div>
+			<noscript>
+  				<div style='width: 302px; height: 352px;'>
+				<div style='width: 302px; height: 352px; position: relative;'>
+				<div style='width: 302px; height: 352px; position: absolute;'>
+					<iframe src='
+						https://www.google.com/recaptcha/api/fallback?k='".C('plugin.reCAPTCHA.public')."'
+						frameborder='0'
+						scrolling='no'
+						style='width: 302px; height:352px; border-style: none;'>
+					</iframe>
+      				</div>
+ 				<div style='width: 250px; height: 80px; position: absolute; border-style: none; bottom: 21px; left: 25px; margin: 0px; padding: 0px; right: 25px;'>
+				        <textarea id='g-recaptcha-response'
+						name='g-recaptcha-response'
+						class='g-recaptcha-response'
+						style='width: 250px; height: 80px; border: 1px solid #c1c1c1; margin: 0px; padding: 0px; resize: none;'
+						value=''>
+        				</textarea>
+				</div>
+				</div>
+				</div>
+			</noscript>";
 	}
 
 	function processRecaptchaField($form, $key, &$data)
