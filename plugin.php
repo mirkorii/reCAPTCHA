@@ -6,7 +6,7 @@ if (!defined("IN_ESOTALK")) exit;
 ET::$pluginInfo["reCAPTCHA"] = array(
 	"name" => "reCAPTCHA",
 	"description" => "Protect your forum from spam and abuse while letting real people pass through with ease.",
-	"version" => "1.1.2",
+	"version" => "1.2.0",
 	"author" => "Tristan van Bokkem",
 	"authorEmail" => "tristanvanbokkem@gmail.com",
 	"authorURL" => "http://esotalk.org",
@@ -65,24 +65,25 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 	{
 		// Format the reCAPTCHA form with some JavaScript and HTML
 		// retrieved from the Google reCAPTCHA library.
-	    return "<script type='text/javascript'>
-					var RecaptchaOptions={theme:'clean', custom_translations:" . json_encode(T("mlarray.reCAPTCHA")) . "};
-					$('#recaptcha_image').live('click', function() { Recaptcha.reload(); });
-				</script>".
-				recaptcha_get_html(C('plugin.reCAPTCHA.public'), '', C('esoTalk.https')).
-				$form->getError("recaptcha_response_field").
-				"<small><i class='icon-question-sign'></i> ".T("message.reCAPTCHARefreshInfo")."</small>";
+	    	return "<div class='g-recaptcha' data-sitekey='".C('plugin.reCAPTCHA.public')."'></div>
+				<script type='text/javascript' src='https://www.google.com/recaptcha/api.js?hl=en'>
+                   </script>";
 	}
 
 	function processRecaptchaField($form, $key, &$data)
 	{
+		// The response from reCAPTCHA
+		$resp = null;
+
 		// Check for reCaptcha.
-		$reCaptcha = true;
-		$resp = recaptcha_check_answer (C('plugin.reCAPTCHA.private'), $_SERVER["REMOTE_ADDR"], $form->getValue("recaptcha_challenge_field"), $form->getValue("recaptcha_response_field"));
-		$reCaptcha = $resp->is_valid;
+		$reCaptcha = new ReCaptcha(C('plugin.reCAPTCHA.private'));
+		$resp = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"], $_POST["g-recaptcha-response"]);
 
 		// If no valid words are entered, show them an error.
-		if (!$reCaptcha) {
+		if ($resp != null && $resp->success) {
+
+			// We're good to go!
+		} else {
 			$form->error("recaptcha_response_field", T("message.invalidCAPTCHA"));
 		}
 	}
