@@ -14,12 +14,12 @@ $form = $data["reCAPTCHASettingsForm"];
 <li>
     <label><?php echo T("Site Key"); ?></label>
     <?php echo $form->input("sitekey"); ?>
-    <small><?php echo T("message.reCAPTCHA.settings"); ?></small>
 </li>
 
 <li>
     <label><strong><?php echo T("Secret Key"); ?></strong></label>
     <?php echo $form->input("secretkey"); ?>
+    <small><?php echo T("message.reCAPTCHA.settings"); ?></small>
 </li>
 
 <li>
