@@ -6,7 +6,7 @@ if (!defined("IN_ESOTALK")) exit;
 ET::$pluginInfo["reCAPTCHA"] = array(
 	"name" => "reCAPTCHA",
 	"description" => "Protect your forum from spam and abuse while letting real people pass through with ease.",
-	"version" => "1.2.3",
+	"version" => "1.2.4",
 	"author" => "Tristan van Bokkem",
 	"authorEmail" => "tristanvanbokkem@gmail.com",
 	"authorURL" => "http://esotalk.org",
