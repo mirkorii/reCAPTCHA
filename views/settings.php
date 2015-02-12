@@ -20,7 +20,6 @@ $form = $data["reCAPTCHASettingsForm"];
     <label><strong><?php echo T("Secret Key"); ?></strong></label>
     <?php echo $form->input("secretkey"); ?>
     <small><?php echo T("message.reCAPTCHA.settings"); ?></small>
-
 </li>
 
 <li>
