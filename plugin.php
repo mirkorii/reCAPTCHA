@@ -34,6 +34,8 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 		// Include the Google reCAPTCHA library.
 		require_once (PATH_PLUGINS."/reCAPTCHA/lib/recaptchalib.php");
 
+		// Define default settings text.
+                ET::define("message.reCAPTCHA.settings", "Enter your reCAPTCHA Keys (<a href='https://www.google.com/recaptcha/admin#whyrecaptcha' target='_blank'>Don't have any keys yet? Get them here!</a>)");
 	}
 
 	// Hook into the join function to include the reCAPTCHA form.
