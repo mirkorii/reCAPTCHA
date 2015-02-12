@@ -34,24 +34,12 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 		// Include the Google reCAPTCHA library.
 		require_once (PATH_PLUGINS."/reCAPTCHA/lib/recaptchalib.php");
 
-		// Define default language definitions.
-		ET::define("message.reCAPTCHARefreshInfo", "Click or tap on an image to refresh it.");
-		ET::define("message.invalidCAPTCHA", "The CAPTCHA you entered is invalid. Please try again.");
-		ET::define("message.reCAPTCHA.settings", "Enter your reCAPTCHA Keys (<a href='https://www.google.com/recaptcha/admin#whyrecaptcha' target='_blank'>Got no Keys yet? Get them here!</a>)");
-		ET::define("mlarray.reCAPTCHA", array(
-			"instructions_visual" => "Type the two words"
-		));
-	}
-
-	public function handler_renderBefore($sender)
-	{
-		$sender->addCSSFile($this->resource("recaptcha.css"));
 	}
 
 	// Hook into the join function to include the reCAPTCHA form.
 	public function handler_userController_initJoin($controller, $form)
 	{
-		if(C('plugin.reCAPTCHA.private') && C('plugin.reCAPTCHA.public')) {
+		if(C('plugin.reCAPTCHA.secretkey') && C('plugin.reCAPTCHA.sitekey')) {
 
 			// Add the reCAPTCHA section.
 			$form->addSection("recaptcha", T("Are you human?"));
@@ -65,14 +53,14 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 	{
 		// Format the reCAPTCHA form with some JavaScript and HTML
 		// retrieved from the Google reCAPTCHA library.
-	    	return "<script type='text/javascript' src='https://www.google.com/recaptcha/api.js?hl=en' async defer></script>
-			<div class='g-recaptcha' data-sitekey='".C('plugin.reCAPTCHA.public')."'></div>
+	    	return "<script type='text/javascript' src='https://www.google.com/recaptcha/api.js?hl=".C('plugin.reCAPTCHA.language')."' async defer></script>
+			<div class='g-recaptcha' data-sitekey='".C('plugin.reCAPTCHA.sitekey')."'></div>
 			<noscript>
   				<div style='width: 302px; height: 352px;'>
 				<div style='width: 302px; height: 352px; position: relative;'>
 				<div style='width: 302px; height: 352px; position: absolute;'>
 					<iframe src='
-						https://www.google.com/recaptcha/api/fallback?k='".C('plugin.reCAPTCHA.public')."'
+						https://www.google.com/recaptcha/api/fallback?k='".C('plugin.reCAPTCHA.sitekey')."'
 						frameborder='0'
 						scrolling='no'
 						style='width: 302px; height:352px; border-style: none;'>
@@ -97,16 +85,9 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 		$resp = null;
 
 		// Check for reCaptcha.
-		$reCaptcha = new ReCaptcha(C('plugin.reCAPTCHA.private'));
+		$reCaptcha = new ReCaptcha(C('plugin.reCAPTCHA.secretkey'));
 		$resp = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"], $_POST["g-recaptcha-response"]);
 
-		// If no valid words are entered, show them an error.
-		if ($resp != null && $resp->success) {
-
-			// We're good to go!
-		} else {
-			$form->error("recaptcha_response_field", T("message.invalidCAPTCHA"));
-		}
 	}
 
 	public function settings($sender)
@@ -115,16 +96,18 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 		$form = ETFactory::make("form");
 		$form->action = URL("admin/plugins/settings/reCAPTCHA");
 
-		$form->setValue("private", C("plugin.reCAPTCHA.private"));
-		$form->setValue("public", C("plugin.reCAPTCHA.public"));
+		$form->setValue("secretkey", C("plugin.reCAPTCHA.secretkey"));
+		$form->setValue("sitekey", C("plugin.reCAPTCHA.sitekey"));
+		$form->setValue("language", C("plugin.reCAPTCHA.language"));
 
 		// If the form was submitted...
 		if ($form->validPostBack()) {
 
 			// Construct an array of config options to write.
 			$config = array();
-			$config["plugin.reCAPTCHA.private"] = $form->getValue("private");
-			$config["plugin.reCAPTCHA.public"] = $form->getValue("public");
+			$config["plugin.reCAPTCHA.secretkey"] = $form->getValue("secretkey");
+			$config["plugin.reCAPTCHA.sitekey"] = $form->getValue("sitekey");
+			$config["plugin.reCAPTCHA.language"] = $form->getValue("language");
 
 			// Write the config file.
 			ET::writeConfig($config);

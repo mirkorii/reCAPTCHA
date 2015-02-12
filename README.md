@@ -29,14 +29,10 @@ Create `definitions.reCAPTCHA.php` in your language pack with the following defi
 
 ```
 $definitions["Are you human?"] = "Are you human?";
-$definitions["Private Key"] = "Private Key";
-$definitions["Public Key"] = "Public Key";
-$definitions["message.reCAPTCHARefreshInfo"] = "Click or tap on an image to refresh it.";
-$definitions["message.invalidCAPTCHA"] = "The CAPTCHA you entered is invalid. Please try again.";
-$definitions["message.reCAPTCHA.settings"] = "Enter your reCAPTCHA Keys (<a href='https://www.google.com/recaptcha/admin#whyrecaptcha' target='_blank'>Got no Keys yet? Get them here!</a>)";
-$definitions["mlarray.reCAPTCHA"] = array(
-	"instructions_visual" => "Type the two words"
-);
+$definitions["Secret Key"] = "Secret Key";
+$definitions["Site Key"] = "Site Key";
+$definitions["Language"] = "Language";
+$definitions["message.reCAPTCHA.settings"] = "Enter your reCAPTCHA Keys (<a href='https://www.google.com/recaptcha/admin#whyrecaptcha' target='_blank'>Don't have any keys yet? Get them here!</a>)";
 ```
 
 ### Screenshots
