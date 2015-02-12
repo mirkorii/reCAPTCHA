@@ -90,6 +90,10 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 		$reCaptcha = new ReCaptcha(C('plugin.reCAPTCHA.secretkey'));
 		$resp = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"], $_POST["g-recaptcha-response"]);
 
+		// If no valid words are entered, show them an error.
+		if ($resp == null || !$resp->success) {
+			$form->error("recaptcha", T("message.invalidCAPTCHA"));
+		}
 	}
 
 	public function settings($sender)
