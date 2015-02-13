@@ -33,6 +33,7 @@ $definitions["Secret Key"] = "Secret Key";
 $definitions["Site Key"] = "Site Key";
 $definitions["Language"] = "Language";
 $definitions["message.reCAPTCHA.settings"] = "Enter your reCAPTCHA Keys (<a href='https://www.google.com/recaptcha/admin#whyrecaptcha' target='_blank'>Don't have any keys yet? Get them here!</a>)";
+$definitions["message.invalidCAPTCHA"] = "The CAPTCHA is invalid. Please try again.";
 ```
 
 ### Screenshots
