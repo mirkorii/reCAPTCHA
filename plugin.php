@@ -35,7 +35,9 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 		require_once (PATH_PLUGINS."/reCAPTCHA/lib/recaptchalib.php");
 
 		// Define default settings text.
-                ET::define("message.reCAPTCHA.settings", "Enter your reCAPTCHA Keys (<a href='https://www.google.com/recaptcha/admin#whyrecaptcha' target='_blank'>Don't have any keys yet? Get them here!</a>)");
+        ET::define("message.reCAPTCHA.settings", "Enter your reCAPTCHA Keys (<a href='https://www.google.com/recaptcha/admin#whyrecaptcha' target='_blank'>Don't have any keys yet? Get them here!</a>)");
+
+        ET::define("message.invalidCAPTCHA", "The CAPTCHA is invalid. Please try again.");
 	}
 
 	// Hook into the join function to include the reCAPTCHA form.
@@ -78,7 +80,7 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 				</div>
 				</div>
 				</div>
-			</noscript>";
+			</noscript>".$form->getError("recaptcha");
 	}
 
 	function processRecaptchaField($form, $key, &$data)
@@ -90,6 +92,10 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 		$reCaptcha = new ReCaptcha(C('plugin.reCAPTCHA.secretkey'));
 		$resp = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"], $_POST["g-recaptcha-response"]);
 
+		// If no valid words are entered, show them an error.
+		if ($resp === null || !$resp->success) {
+			$form->error("recaptcha", T("message.invalidCAPTCHA"));
+		}
 	}
 
 	public function settings($sender)
