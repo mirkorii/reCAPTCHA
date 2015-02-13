@@ -1,5 +1,5 @@
 <?php
-// Copyright 2014 Tristan van Bokkem
+// Copyright 2015 Tristan van Bokkem
 
 if (!defined("IN_ESOTALK")) exit;
 
@@ -12,7 +12,7 @@ $form = $data["reCAPTCHASettingsForm"];
 <ul class='form'>
 
 <li>
-    <label><?php echo T("Site Key"); ?></label>
+    <label><strong><?php echo T("Site Key"); ?></strong></label>
     <?php echo $form->input("sitekey"); ?>
 </li>
 
