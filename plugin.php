@@ -6,7 +6,7 @@ if (!defined("IN_ESOTALK")) exit;
 ET::$pluginInfo["reCAPTCHA"] = array(
 	"name" => "reCAPTCHA",
 	"description" => "Protect your forum from spam and abuse while letting real people pass through with ease.",
-	"version" => "1.2.5",
+	"version" => "1.3",
 	"author" => "Tristan van Bokkem",
 	"authorEmail" => "tristanvanbokkem@gmail.com",
 	"authorURL" => "http://esotalk.org",
@@ -31,8 +31,8 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 
 	public function init()
 	{
-		// Include the Google reCAPTCHA library.
-		require_once (PATH_PLUGINS."/reCAPTCHA/lib/recaptchalib.php");
+		// Include the Google reCAPTCHA library via autoload (composer style).
+		require_once (PATH_PLUGINS."/reCAPTCHA/autoload.php");
 
 		// Define default settings text.
         	ET::define("message.reCAPTCHA.settings", "Enter your reCAPTCHA Keys (<a href='https://www.google.com/recaptcha/admin#whyrecaptcha' target='_blank'>Don't have any keys yet? Get them here!</a>)");
@@ -58,42 +58,23 @@ class ETPlugin_reCAPTCHA extends ETPlugin {
 		// Format the reCAPTCHA form with some JavaScript and HTML
 		// retrieved from the Google reCAPTCHA library.
 	    	return "<script type='text/javascript' src='https://www.google.com/recaptcha/api.js?hl=".C('plugin.reCAPTCHA.language')."' async defer></script>
-			<div class='g-recaptcha' data-sitekey='".C('plugin.reCAPTCHA.sitekey')."'></div>
-			<noscript>
-  				<div style='width: 302px; height: 352px;'>
-				<div style='width: 302px; height: 352px; position: relative;'>
-				<div style='width: 302px; height: 352px; position: absolute;'>
-					<iframe src='
-						https://www.google.com/recaptcha/api/fallback?k='".C('plugin.reCAPTCHA.sitekey')."'
-						frameborder='0'
-						scrolling='no'
-						style='width: 302px; height:352px; border-style: none;'>
-					</iframe>
-      				</div>
- 				<div style='width: 250px; height: 80px; position: absolute; border-style: none; bottom: 21px; left: 25px; margin: 0px; padding: 0px; right: 25px;'>
-				        <textarea id='g-recaptcha-response'
-						name='g-recaptcha-response'
-						class='g-recaptcha-response'
-						style='width: 250px; height: 80px; border: 1px solid #c1c1c1; margin: 0px; padding: 0px; resize: none;'
-						value=''>
-        				</textarea>
-				</div>
-				</div>
-				</div>
-			</noscript>".$form->getError("recaptcha");
+			<div class='g-recaptcha' data-sitekey='".C('plugin.reCAPTCHA.sitekey')."'></div>".$form->getError("recaptcha");
 	}
 
 	function processRecaptchaField($form, $key, &$data)
 	{
-		// The response from reCAPTCHA
+		// Declare the response var.
 		$resp = null;
 
-		// Check for reCaptcha.
-		$reCaptcha = new ReCaptcha(C('plugin.reCAPTCHA.secretkey'));
-		$resp = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"], $_POST["g-recaptcha-response"]);
+		// Sanatize the $_POST data.
+		$gRecaptchaResponse = sanitizeHTML($_POST["g-recaptcha-response"]);
 
-		// If no valid words are entered, show them an error.
-		if ($resp === null || !$resp->success) {
+		// Check for reCaptcha.
+                $recaptcha = new \ReCaptcha\ReCaptcha(C('plugin.reCAPTCHA.secretkey'));
+		$resp = $recaptcha->verify($gRecaptchaResponse, $_SERVER["REMOTE_ADDR"]);
+
+		// If no valid captcha is submitted, show them an error.
+		if (!$resp->isSuccess()) {
 			$form->error("recaptcha", T("message.invalidCAPTCHA"));
 		}
 	}

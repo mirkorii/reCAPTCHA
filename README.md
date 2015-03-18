@@ -15,7 +15,7 @@ cd WEB_ROOT_DIR/addons/plugins/
 
 Clone the reCAPTCHA plugin repo into the plugin directory:
 ```
-git clone git@github.com:tristanvanbokkem/reCAPTCHA.git reCAPTCHA
+git clone git@github.com:tvb/reCAPTCHA.git reCAPTCHA
 ```
 
 Chown the reCAPTCHA plugin folder to the right web user:
