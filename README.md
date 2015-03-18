@@ -38,10 +38,10 @@ $definitions["message.invalidCAPTCHA"] = "The CAPTCHA is invalid. Please try aga
 
 ### Screenshots
 Sign Up page
-![Sign Up page](http://i.imgur.com/xq3WbLf.png)
+![Sign Up page](http://i.imgur.com/jBgbQ6C.png)
 
-Wrong CAPTCHA
-![Wrong CAPTCHA](http://i.imgur.com/THqvAsK.png)
+reCAPTCHA in action
+![Wrong CAPTCHA](http://i.imgur.com/uKHp8rY.png)
 
 reCAPTCHA Settings
-![reCAPTCHA Settings](http://i.imgur.com/M7ZX1R1.png)
+![reCAPTCHA Settings](http://i.imgur.com/lzqy6ue.png)
